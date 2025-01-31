@@ -141,28 +141,7 @@ export default function Frame(
         <h1 className="text-2xl font-bold text-center mb-4 text-neutral-900">{title}</h1>
         <ExampleCard />
         <div className="mt-4">
-          <PurpleButton
-            onClick={async () => {
-              try {
-                const { data: walletClient } = useWalletClient();
-                if (!walletClient) {
-                  console.error('No wallet client');
-                  return;
-                }
-                
-                const hash = await walletClient.sendTransaction({
-                  to: RECIPIENT_ADDRESS,
-                  value: parseEther('0.01'), // Sending 0.01 ETH
-                });
-                
-                console.log('Transaction sent:', hash);
-              } catch (error) {
-                console.error('Transaction failed:', error);
-              }
-            }}
-          >
-            Send 0.01 ETH to hellno.eth
-          </PurpleButton>
+          <TransactionButton />
         </div>
       </div>
     </div>
