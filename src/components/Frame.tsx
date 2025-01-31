@@ -6,6 +6,8 @@ import sdk, {
   SignIn as SignInCore,
   type Context,
 } from "@farcaster/frame-sdk";
+import { useAccount, useWalletClient } from 'wagmi';
+import { parseEther } from 'viem';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/components/ui/card";
 
 import { config } from "~/components/providers/WagmiProvider";
@@ -15,7 +17,7 @@ import { base, optimism } from "wagmi/chains";
 import { useSession } from "next-auth/react";
 import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
-import { PROJECT_TITLE } from "~/lib/constants";
+import { PROJECT_TITLE, RECIPIENT_ADDRESS } from "~/lib/constants";
 
 function ExampleCard() {
   return (
@@ -138,6 +140,30 @@ export default function Frame(
       <div className="w-[300px] mx-auto py-2 px-2">
         <h1 className="text-2xl font-bold text-center mb-4 text-neutral-900">{title}</h1>
         <ExampleCard />
+        <div className="mt-4">
+          <PurpleButton
+            onClick={async () => {
+              try {
+                const { data: walletClient } = useWalletClient();
+                if (!walletClient) {
+                  console.error('No wallet client');
+                  return;
+                }
+                
+                const hash = await walletClient.sendTransaction({
+                  to: RECIPIENT_ADDRESS,
+                  value: parseEther('0.01'), // Sending 0.01 ETH
+                });
+                
+                console.log('Transaction sent:', hash);
+              } catch (error) {
+                console.error('Transaction failed:', error);
+              }
+            }}
+          >
+            Send 0.01 ETH to hellno.eth
+          </PurpleButton>
+        </div>
       </div>
     </div>
   );
